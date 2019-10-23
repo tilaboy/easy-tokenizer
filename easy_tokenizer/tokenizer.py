@@ -33,7 +33,8 @@ class Tokenizer():
                                                               match.end()))
                     yield TokenWithPos(phrase, match.start(), match.end())
                 else:
-                    for token in self._top_down_tokenize(phrase, match.start()):
+                    for token in self._top_down_tokenize(phrase,
+                                                         match.start()):
                         if self._has_end_of_phrase_punc(token.text):
                             LOGGER.debug('split_last : [{}], {}, {}'.format(
                                 token.text, token.start, token.end))
@@ -73,7 +74,9 @@ class Tokenizer():
                 LOGGER.debug('l1_match: [{}], {}, {}'.format(sub_phrase,
                              offset,
                              offset + len(sub_phrase)))
-                yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
+                yield TokenWithPos(sub_phrase,
+                                   offset,
+                                   offset + len(sub_phrase))
 
             else:
                 LOGGER.debug('l2_start: [{}], {}, {}'.format(sub_phrase,
@@ -94,7 +97,9 @@ class Tokenizer():
                 LOGGER.debug('l2_match: [{}], {}, {}'.format(sub_phrase,
                              offset,
                              offset + len(sub_phrase)))
-                yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
+                yield TokenWithPos(sub_phrase,
+                                   offset,
+                                   offset + len(sub_phrase))
             else:
                 LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
                              offset,
@@ -114,7 +119,9 @@ class Tokenizer():
                 LOGGER.debug('l3_match: [{}], {}, {}'.format(sub_phrase,
                              offset,
                              offset + len(sub_phrase)))
-                yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
+                yield TokenWithPos(sub_phrase,
+                                   offset,
+                                   offset + len(sub_phrase))
             else:
                 LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
                              offset,
