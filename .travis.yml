@@ -1,0 +1,20 @@
+language: python
+python:
+- 3.7
+- 3.6
+install:
+- pip install -U tox-travis
+- pip install -U flake8
+script:
+- flake8 easy_tokenizer
+- tox
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: tilaboy
+  password:
+    secure: gvAvSAkRXoe6H/1GN10mgGp0mRkTksnLR1zfhLMUCX3zsTAAYG774kEnjmtXDPwaUehc3M6L/Od67HJ/iHMf398uoubyxyJWpYSvWco1s4QhdUP6+e3WS+XzTW4uAboXYXDDg3MxW8PS1hDTQkMVQzzLMMj4WNLjqx3MPH8fNqe0fCIsmYQj/C1Dhb7kD8lfzA2B4YGb3Nfn9MwyuStIknMdRvd1itCw3HSGSGnE/kxCie+NOMDu+B80727wvNO6DSJVPGjp5NACLLGJPDxzrSqv6HFkCpDbycTEgaBlgpa9o3ZAKgpOvjzBcclnBGtELKeHxhM5tBNUbmE9sTxkonkNhn0fkp76TgX5D6Xww+m2Y/pqDsNvjHcr0K+LLHGf6zsZd3tZI1yu3WRSysePLcPozSjaWlHKkWbJ7pnsGHZZnqyme2oy5NsZCz7sWxKwDipW4NS1yAkibXctMQetiyq5labUS3pWp8PHsk+XcmTBfR94Dak7FbaATNaShHShUClCx7lig+gxoXb/Uym9zq8W+5QSow2cPkWR35a9vo57fZd1Qqeakx2LIjUzVbGi8ZA2d6prnv+QjFLSqL0rG4miT2inOod252zTihV0lXtn81A8CWwwQSWghzEeUPxt6bU9HZSH3u1MtOWop6pOShtZKQteMajXw+uWObm1Ino=
+  on:
+    tags: true
+    repo: tilaboy/easy-tokenizer
+    python: 3.6
