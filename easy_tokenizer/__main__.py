@@ -50,4 +50,8 @@ def main():
         LOGGER.info('tokenize input string')
         result = tokenizer.tokenize(args.string)
 
-    print(result)
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as output_f:
+            output_f.write(" ".join(result))
+    else:
+        print(" ".join(result))
