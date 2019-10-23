@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 NAME = "easy_tokenizer"
-VERSION = os.environ.get("EASY_TOKENIZER_VERSION", '0.0.5')
+VERSION = os.environ.get("EASY_TOKENIZER_VERSION", '0.0.0')
 
 with open('README.rst', "r") as readme_file:
     readme = readme_file.read()
@@ -37,7 +37,7 @@ setup(
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "easy-tokenizer=easy_tokenizer.easy_tokenizer:main"
+            "easy-tokenizer=easy_tokenizer.__main__:main"
         ],
     },
     license="MIT license",
