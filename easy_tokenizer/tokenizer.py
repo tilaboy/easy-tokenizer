@@ -5,6 +5,7 @@ from . import LOGGER
 from .token_with_pos import TokenWithPos
 from .patterns import Patterns
 
+
 class Tokenizer():
     '''
     A basic Tokenizer class to tokenize strings and patterns
@@ -16,7 +17,6 @@ class Tokenizer():
         if regexp is not None:
             self.regexp = regexp
         else:
-            #self.regexp = re.compile(r'\w+|[^\w\s]+')
             self.regexp = re.compile(r'[^\s]+|\s+')
         self.space_regexp = re.compile(r'\s')
 
@@ -47,9 +47,10 @@ class Tokenizer():
                             ]:
                                 yield splitted_token
                         else:
-                            LOGGER.debug('\toutput: [{}], {}, {}'.format(token.text,
-                                                                         token.start,
-                                                                         token.end))
+                            LOGGER.debug('\toutput: [{}], {}, {}'.
+                                         format(token.text,
+                                                token.start,
+                                                token.end))
                             yield token
 
     def _top_down_tokenize(self, phrase, offset=0):
@@ -61,7 +62,6 @@ class Tokenizer():
         for token in self._top_down_level_1(phrase, offset):
             yield token
 
-
     def _top_down_level_1(self, phrase, offset=0):
         '''
         level 1: split on url, emails
@@ -71,14 +71,14 @@ class Tokenizer():
                 continue
             if self._phrase_full_match(sub_phrase) is not None:
                 LOGGER.debug('l1_match: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
 
             else:
                 LOGGER.debug('l2_start: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 for token in self._top_down_level_2(sub_phrase, offset):
                     yield token
             offset += len(sub_phrase)
@@ -88,17 +88,17 @@ class Tokenizer():
         level 2: split on number phrases
         '''
         for sub_phrase in re.split(Patterns.DIGITS_CAPTURED_RE, phrase):
-            if sub_phrase is '':
+            if sub_phrase == '':
                 continue
             if self._phrase_full_match(sub_phrase) is not None:
                 LOGGER.debug('l2_match: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
             else:
                 LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 for token in self._top_down_level_3(sub_phrase, offset):
                     yield token
             offset = offset + len(sub_phrase)
@@ -108,17 +108,17 @@ class Tokenizer():
         level 3: split on normal word boundaries
         '''
         for sub_phrase in re.split(Patterns.WORD_BF_CAPTURED_RE, phrase):
-            if sub_phrase is '':
+            if sub_phrase == '':
                 continue
             if self._phrase_full_match(sub_phrase) is not None:
                 LOGGER.debug('l3_match: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase, offset, offset + len(sub_phrase))
             else:
                 LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
-                                                             offset,
-                                                             offset + len(sub_phrase)))
+                             offset,
+                             offset + len(sub_phrase)))
                 for token in self._top_down_level_4(sub_phrase, offset):
                     yield token
             offset = offset + len(sub_phrase)
@@ -130,7 +130,7 @@ class Tokenizer():
 
         splitted = False
         parts = []
-        # - split on hyphen
+        # - split on hyphen #
         if Patterns.HYPHEN_RE.search(phrase):
             splitted = True
             parts = [
@@ -141,8 +141,9 @@ class Tokenizer():
             if len(parts) == 3:
                 if parts[0].lower() in Patterns.COMMON_HYPHEN_START:
                     splitted = False
-                elif len(parts[0]) < 4 and len(parts[2]) < 4 and len(parts[0]) + len(parts[2]) < 6:
-                    # mx-doc, tcp-ip, e-mail, hp-ux etc.
+                elif len(parts[0]) < 4 and len(parts[2]) < 4 \
+                        and len(parts[0]) + len(parts[2]) < 6:
+                    # mx-doc, tcp-ip, e-mail, hp-ux etc. #
                     splitted = False
 
         LOGGER.debug('split phrase: [{}] is {}'.format(phrase, splitted))
@@ -151,9 +152,8 @@ class Tokenizer():
                 yield TokenWithPos(part, offset, offset + len(part))
                 offset += len(part)
         else:
-            # pick up what ever left as a token
+            # pick up what ever left as a token #
             yield TokenWithPos(phrase, offset, offset + len(phrase))
-
 
     def _has_end_of_phrase_punc(self, phrase):
         end_char_is_punc = False
@@ -163,9 +163,6 @@ class Tokenizer():
                     end_char_is_punc = False
                 else:
                     end_char_is_punc = True
-            #else:
-
-
         return end_char_is_punc
 
     def _phrase_full_match(self, phrase):

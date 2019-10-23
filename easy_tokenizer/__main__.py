@@ -1,7 +1,6 @@
 '''
 taxonomy_match: script to load a taxonomy, and find all matches from input
 '''
-import os.path
 from argparse import ArgumentParser
 from . import LOGGER
 from .tokenizer import Tokenizer
@@ -25,6 +24,7 @@ def get_args():
 
     return parser.parse_args()
 
+
 def main():
     '''
     tokenzier
@@ -40,17 +40,14 @@ def main():
     args = get_args()
 
     result = ''
-    tokenizer = Tokenizer();
-
+    tokenizer = Tokenizer()
     if args.filename:
         LOGGER.info('tokenize text file {}'.format(args.filename))
         with open(args.filename, "r", encoding="utf-8") as input_f:
             input_text = input_f.read()
         result = tokenizer.tokenize(input_text)
-
     elif args.string:
         LOGGER.info('tokenize input string')
         result = tokenizer.tokenize(args.string)
 
-    
     print(result)

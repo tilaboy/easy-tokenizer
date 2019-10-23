@@ -10,6 +10,7 @@ __email__ = 'chaoli.job@google.com'
 __version__ = '0.0.0'
 name = "easy-tokenizer"
 
+
 def define_logger(mod_name):
     """Set the default logging configuration"""
     logger = logging.getLogger(mod_name)

@@ -1,5 +1,6 @@
 '''Class for tokens with position information'''
 
+
 class TokenWithPos:
     '''
     TokenWithPos: token with start and end position in the text

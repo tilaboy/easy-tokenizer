@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 import re
 
+
 def _captured_pattern(pattern):
     return r'(' + pattern + r')'
 
@@ -33,7 +34,9 @@ class Patterns:
         "°", "°c", "°f"
     ]
 
-    digits_pn = r'(?:\b|^)[-+±~]?(?:\d[-.,0-9\/#]*\d|\d+(?:st|nd|rd|th|[dD])?)[%]?(?:\b|$)'
+    digits_pn = r'(?:\b|^)[-+±~]?(?:\d[-.,0-9\/#]*\d|'\
+                r'\d+(?:st|nd|rd|th|[dD])?)'\
+                r'[%]?(?:\b|$)'
     digits_captured_pn = _captured_pattern(digits_pn)
 
     DIGIT_RE = re.compile(r'\d')
@@ -44,10 +47,11 @@ class Patterns:
     # url, email
     ##################################
     url_pn = r"(?:[\w-]+:\/\/?|\w+[.])" \
-    r"(?:[0-9a-zA-Z][-\w_]*)" \
-    r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
-    r"(?:(?:\/[0-9a-zA-Z\-_?#=]+)+)?\/?|" \
-    r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+[0-9a-zA-Z\/]"
+             r"(?:[0-9a-zA-Z][-\w_]*)" \
+             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
+             r"(?:(?:\/[0-9a-zA-Z\-_?#=]+)+)?\/?|" \
+             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|"\
+             r"(?:%[0-9a-fA-F][0-9a-fA-F]))+[0-9a-zA-Z\/]"
 
     email_pn = r"\S+[@]\S+[.]\S+"
     domain_pn = r"[@]\S+[.]\S+"
@@ -73,7 +77,8 @@ class Patterns:
     HYPHEN_RE = re.compile(hyphen_pn)
     HYPHEN_CAPTURED_RE = re.compile(_captured_pattern(hyphen_pn))
 
-    COMMON_HYPHEN_START = ['e', 'i', 're', 'ex', 'self', 'fore', 'all', 'low', 'high']
+    COMMON_HYPHEN_START = ['e', 'i', 're', 'ex', 'self',
+                           'fore', 'all', 'low', 'high']
 
     # abbrev
     ##################################
@@ -93,7 +98,8 @@ class Patterns:
     def abbreviation(phrase):
         is_abbrev = False
         if phrase[-1] == '.':
-            if phrase[0].isupper() and phrase[:-1].isalpha() and len(phrase[:-1]) < 4:
+            if phrase[0].isupper() and phrase[:-1].isalpha() and \
+                    len(phrase[:-1]) < 4:
                 is_abbrev = True
             elif Patterns.ABBREV_RE.fullmatch(phrase):
                 is_abbrev = True
