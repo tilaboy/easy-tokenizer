@@ -1,6 +1,10 @@
 
+0.0.5 (2019-10-23)
+==================
 
-0.0.3 (2019-10-3)
+- [Bugfix] encryption and doc generation
+
+0.0.3 (2019-10-23)
 ==================
 
 - Test the CI/CD and auto documentation generation
