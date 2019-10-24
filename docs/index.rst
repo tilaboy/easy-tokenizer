@@ -1,5 +1,5 @@
 Welcome to easy-tokenizer's documentation!
-======================================
+============================================
 
 .. toctree::
    :maxdepth: 2
