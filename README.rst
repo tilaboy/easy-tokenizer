@@ -11,6 +11,7 @@ url, email, long digits rather well.
 
 
 Try with the following script:
+
 ``easy_tokenizer -s input_text``
 
 or
@@ -74,7 +75,7 @@ examples:
     easy-tokenizer -f foo.txt
     easy-tokenizer -f foo.txt -o bar.txt
 
-output will be "this is a simple test ."  
+output will be "this is a simple test ."
 
 Development
 -----------
