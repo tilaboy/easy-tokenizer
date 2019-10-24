@@ -26,13 +26,13 @@ CI Status
     :target: https://travis-ci.org/tilaboy/easy-tokenizer
 
 .. image:: https://readthedocs.org/projects/easy-tokenizer/badge/?version=latest
-:target: https://easy-tokenizer.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+    :target: https://easy-tokenizer.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 
 .. image:: https://pyup.io/repos/github/tilaboy/easy-tokenizer/shield.svg
-     :target: https://pyup.io/repos/github/tilaboy/easy-tokenizer/
-     :alt: Updates
+    :target: https://pyup.io/repos/github/tilaboy/easy-tokenizer/
+    :alt: Updates
 
 Requirements
 ------------
