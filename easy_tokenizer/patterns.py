@@ -47,15 +47,15 @@ class Patterns:
     # url, email
     ##################################
     url_pn = r"(?:[\w-]+:\/\/?|\w+[.])" \
-             r"(?:[0-9a-zA-Z][-\w_]*)" \
-             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
-             r"(?:(?:\/[0-9a-zA-Z\-_?#=]+)+)?\/?|" \
-             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|"\
-             r"(?:%[0-9a-fA-F][0-9a-fA-F]))+[0-9a-zA-Z\/]"
+    r"(?:[0-9a-zA-Z][-\w_]*)" \
+    r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
+    r"(?:(?:\/(?:[0-9a-zA-Z]|[\-_?#=:&]|%[0-9a-fA-F]{2}|\.[0-9a-zA-Z]|)+)+)?\/?"
+
+    url_strict_pn = r'(?:(?:http[s]?|ftp)://|www[.])(?:[0-9a-zA-Z]|[._?#=/:%&-])+(?:\/|[0-9a-zA-Z])'
 
     email_pn = r"\S+[@]\S+[.]\S+"
     domain_pn = r"[@]\S+[.]\S+"
-    all_web_pn = "|".join([url_pn, email_pn, domain_pn])
+    all_web_pn = "|".join([url_pn, url_strict_pn, email_pn, domain_pn])
     all_web_captured_pn = _captured_pattern(all_web_pn)
 
     URL_RE = re.compile(url_pn)
