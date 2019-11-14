@@ -1,3 +1,7 @@
+0.0.8 (2019-11-14)
+==================
+
+- [New] added a function module for char/string normalization
 
 0.0.7 (2019-11-14)
 ==================
