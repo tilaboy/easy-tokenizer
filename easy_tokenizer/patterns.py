@@ -47,11 +47,13 @@ class Patterns:
     # url, email
     ##################################
     url_pn = r"(?:[\w-]+:\/\/?|\w+[.])" \
-    r"(?:[0-9a-zA-Z][-\w_]*)" \
-    r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
-    r"(?:(?:\/(?:[0-9a-zA-Z]|[\-_?#=:&]|%[0-9a-fA-F]{2}|\.[0-9a-zA-Z]|)+)+)?\/?"
+             r"(?:[0-9a-zA-Z][-\w_]*)" \
+             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
+             r"(?:(?:\/(?:[0-9a-zA-Z]|[\-_?#=:&]|" \
+             r"%[0-9a-fA-F]{2}|\.[0-9a-zA-Z]|)+)+)?\/?"
 
-    url_strict_pn = r'(?:(?:http[s]?|ftp)://|www[.])(?:[0-9a-zA-Z]|[._?#=/:%&-])+(?:\/|[0-9a-zA-Z])'
+    url_strict_pn = r'(?:(?:http[s]?|ftp)://|www[.])' \
+                    r'(?:[0-9a-zA-Z]|[._?#=/:%&-])+(?:\/|[0-9a-zA-Z])'
 
     email_pn = r"\S+[@]\S+[.]\S+"
     domain_pn = r"[@]\S+[.]\S+"
@@ -82,7 +84,9 @@ class Patterns:
 
     # abbrev
     ##################################
-    months = ['jan', 'feb', 'mar', 'apr', 'jun', 'jul', 'aug', 'sep', 'Sept',
+
+    months = ['jan', 'feb', 'mar', 'apr', 'jun',
+              'jul', 'aug', 'sep', 'Sept',
               'sept', 'SEPT', 'oct', 'nov', 'dec']
 
     repeat_abbrev_pn = r'(\w\.){2,}'
