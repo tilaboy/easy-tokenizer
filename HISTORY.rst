@@ -1,4 +1,9 @@
 
+0.0.6 (2019-11-14)
+==================
+
+- [Bugfix] update the url patter to fix the regexp loop for long url string
+
 0.0.5 (2019-10-23)
 ==================
 
