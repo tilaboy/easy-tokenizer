@@ -26,33 +26,45 @@ class Tokenizer():
             LOGGER.debug('check: [{}]'.format(phrase))
             if self.space_regexp.search(phrase):
                 continue
+
+            if self._phrase_full_match(phrase) is not None:
+                LOGGER.debug('match: [{}], {}, {}'.format(phrase,
+                                                          match.start(),
+                                                          match.end()))
+                yield TokenWithPos(phrase, match.start(), match.end())
             else:
-                if self._phrase_full_match(phrase) is not None:
-                    LOGGER.debug('match: [{}], {}, {}'.format(phrase,
-                                                              match.start(),
-                                                              match.end()))
-                    yield TokenWithPos(phrase, match.start(), match.end())
-                else:
-                    for token in self._top_down_tokenize(phrase,
-                                                         match.start()):
-                        if self._has_end_of_phrase_punc(token.text):
-                            LOGGER.debug('split_last : [{}], {}, {}'.format(
-                                token.text, token.start, token.end))
-                            for splitted_token in [
-                                    TokenWithPos(token.text[:-1],
-                                                 token.start,
-                                                 token.end - 1),
-                                    TokenWithPos(token.text[-1],
-                                                 token.end - 1,
-                                                 token.end)
-                            ]:
-                                yield splitted_token
-                        else:
-                            LOGGER.debug('\toutput: [{}], {}, {}'.
-                                         format(token.text,
-                                                token.start,
-                                                token.end))
-                            yield token
+                for token in self._top_down_tokenize(phrase,
+                                                     match.start()):
+                    if Patterns.PUNCT_SEQ_RE.fullmatch(token.text) and \
+                    Patterns.PARA_SEP_RE.fullmatch(token.text) is None:
+                        LOGGER.debug('split punc strings [{}]'.format(
+                            token.text))
+                        # a string of punc, very likely .. or ...
+                        for shift, single_char in enumerate(token.text):
+                            LOGGER.debug('punc seq[{}]: {}, {} -> {}'.format(
+                                    shift, single_char, token.start+shift, token.start+shift+1))
+                            yield TokenWithPos(single_char,
+                                               token.start+shift,
+                                               token.start+shift+1)
+
+                    elif self._has_end_of_phrase_punc(token.text):
+                        LOGGER.debug('split_last : [{}], {}, {}'.format(
+                            token.text, token.start, token.end))
+                        for splitted_token in [
+                                TokenWithPos(token.text[:-1],
+                                             token.start,
+                                             token.end - 1),
+                                TokenWithPos(token.text[-1],
+                                             token.end - 1,
+                                             token.end)
+                        ]:
+                            yield splitted_token
+                    else:
+                        LOGGER.debug('  output: [{}], {}, {}'.
+                                     format(token.text,
+                                            token.start,
+                                            token.end))
+                        yield token
 
     def _top_down_tokenize(self, phrase, offset=0):
         # first get the web url and emails out
@@ -123,7 +135,7 @@ class Tokenizer():
                                    offset,
                                    offset + len(sub_phrase))
             else:
-                LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
+                LOGGER.debug('l4_start: [{}], {}, {}'.format(sub_phrase,
                              offset,
                              offset + len(sub_phrase)))
                 for token in self._top_down_level_4(sub_phrase, offset):
@@ -184,8 +196,10 @@ class Tokenizer():
             matched_type = 'digit'
         elif Patterns.abbreviation(phrase):
             matched_type = 'abbreviation'
-        elif Patterns.is_paragraph_seprator(phrase):
+        elif Patterns.PARA_SEP_RE.fullmatch(phrase):
             matched_type = 'punctuation_seq'
+
+        LOGGER.debug('matched type: [{}]'.format(matched_type))
         return matched_type
 
     def tokenize(self, text):

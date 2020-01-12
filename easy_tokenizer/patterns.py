@@ -70,7 +70,7 @@ class Patterns:
     # word bourdary
     ##################################
 
-    word_bf_pn = r'[\(\)\[\]\{\}\"“”\'`»\:,\/\\]'
+    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>&@^$\|~%]|\.{2,}'
     word_bf_captured_pn = _captured_pattern(word_bf_pn)
     WORD_BF_CAPTURED_RE = re.compile(word_bf_captured_pn)
 
@@ -84,7 +84,6 @@ class Patterns:
 
     # abbrev
     ##################################
-
     months = ['jan', 'feb', 'mar', 'apr', 'jun',
               'jul', 'aug', 'sep', 'Sept',
               'sept', 'SEPT', 'oct', 'nov', 'dec']
@@ -93,10 +92,8 @@ class Patterns:
     known_month_pn = r"(?:" + r"|".join(months) + r")\."
     ABBREV_RE = re.compile(repeat_abbrev_pn + r'|' + known_month_pn)
 
-    @staticmethod
-    def is_paragraph_seprator(phrase):
-        punct_seq_regexp = re.compile(r'([\W]|\+\-)\1{2,}')
-        return punct_seq_regexp.fullmatch(phrase)
+    PUNCT_SEQ_RE = re.compile(r'[-!\'#%&`()\[\]*+,.\\/:;<=>?@^$_{|}~]+')
+    PARA_SEP_RE = re.compile(r'(\W|\+\-)\1{4,}')
 
     @staticmethod
     def abbreviation(phrase):
