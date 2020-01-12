@@ -101,7 +101,7 @@ class TokenizerTestCases(TestCase):
                 "Aug. foo.",
                 'foo@bar.com aap.noot@mies.wim aap5@noot.mies',
                 'http://www.viadeo.com/profile/34mies',
-                '.... ----',
+                '..... -----',
                 '.net c++ F#',
                 '$100,000.99 10.12 10,12 10.123 10,123 10.000,12',
                 '1st',
@@ -110,8 +110,8 @@ class TokenizerTestCases(TestCase):
         ]
         expected_tokens = [
             ['een', 'mooie', 'test', 'zin', '.'],
-            ['foo...'],
-            ['foo...bar'],
+            ['foo', '.', '.', '.'],
+            ['foo', '.', '.', '.', 'bar'],
             ["l", "'", "agence"],
             ["d", "'", "origine"],
             ['foo', ',', 'bar'],
@@ -119,7 +119,7 @@ class TokenizerTestCases(TestCase):
             ['Aug.', 'foo', '.'],
             ['foo@bar.com', 'aap.noot@mies.wim', 'aap5@noot.mies'],
             ['http://www.viadeo.com/profile/34mies'],
-            ['....', '----'],
+            ['.....', '-----'],
             ['.net', 'c++', 'F#'],
             ['$', '100,000.99', '10.12', '10,12', '10.123', '10,123', '10.000,12'],
             ['1st'],
@@ -222,6 +222,34 @@ try this one https://docs.google.com/document/d/1pd/edit?ts=5da580bc'''
         for index in range(len(expected_tokens)):
             tokens = list(self.tokenizer.tokenize(text[index]))
             self.assertEqual(tokens, expected_tokens[index])
+
+
+    def test_word_cancatenate_nonword(self):
+        text = ["**Français : Niveau élevé",
+                "*Français",
+                "*Anglais. (Scolaire)",
+                "Arabe...",
+                "Arabe..",
+                "#net",
+                "??Arabe",
+                "'abc', why!!!"]
+
+        expected_tokens = [
+            [ '*', '*', 'Français', ':', 'Niveau', 'élevé'],
+            ['*', 'Français'],
+            ['*', 'Anglais', '.', '(', 'Scolaire', ')'],
+            ['Arabe', '.', '.', '.'],
+            ['Arabe', '.', '.'],
+            ['#net'],
+            ['?', '?', 'Arabe'],
+            ['\'', 'abc', '\'', ',', 'why', '!', '!', '!']
+        ]
+        for index in range(len(text)):
+            self.assertEqual(
+                list(self.tokenizer.tokenize(text[index])),
+                expected_tokens[index]
+            )
+
 
     @staticmethod
     def get_url_text():

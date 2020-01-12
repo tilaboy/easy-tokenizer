@@ -26,6 +26,24 @@ class PatternsTestCases(TestCase):
                 expected_results[index]
             )
 
+    def test_word_boundary_regexp(self):
+        text = ['abc"d', 'abc/d', 'abc\\d', 'abc[d', 'abc(d', 'abc!d', 'abc#d', 'abc*d']
+        expected_results = [
+            ['abc', '"', 'd'],
+            ['abc', '/', 'd'],
+            ['abc', '\\', 'd'],
+            ['abc', '[', 'd'],
+            ['abc', '(', 'd'],
+            ['abc', '!', 'd'],
+            ['abc#d'],
+            ['abc', '*', 'd'],
+        ]
+        for index in range(len(text)):
+            matched_text = [substr for substr in re.split(Patterns.WORD_BF_CAPTURED_RE, text[index]) if substr != '' ]
+            self.assertEqual(
+                matched_text,
+                expected_results[index])
+
     def test_url_regexp(self):
         text = ['http://www.erdfdistribution.fr',
                 'http://www.edf-bleuciel.fr',
