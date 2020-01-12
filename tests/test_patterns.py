@@ -7,8 +7,10 @@ from easy_tokenizer.patterns import Patterns
 class PatternsTestCases(TestCase):
 
     def test_abbrev(self):
-        text = ['Feb.', 'FEB.', 'feb.', 'me.', '2002.', 'end.', 'B.V.', 'b.c.', 'm.s.c.']
-        expected_results  = [True, True, True, False, False, False, True, True, True]
+        text = ['Feb.', 'FEB.', 'feb.', 'me.', '2002.',
+                'end.', 'B.V.', 'b.c.', 'm.s.c.']
+        expected_results = [True, True, True, False,
+                            False, False, True, True, True]
         for index in range(len(text)):
             self.assertEqual(
                 Patterns.abbreviation(text[index]),
@@ -16,7 +18,8 @@ class PatternsTestCases(TestCase):
             )
 
     def test_digits_regexp(self):
-        text = ['123.21', '176#21', '111,10', '#$@#', '123ab', 'v1.0.0.1', '98.01%']
+        text = ['123.21', '176#21', '111,10', '#$@#',
+                '123ab', 'v1.0.0.1', '98.01%']
         expected_results = ['123.21', '176#21', '111,10', '', '', '', '98.01%']
         for index in range(len(text)):
             matched = Patterns.DIGITS_RE.fullmatch(text[index])
@@ -27,7 +30,8 @@ class PatternsTestCases(TestCase):
             )
 
     def test_word_boundary_regexp(self):
-        text = ['abc"d', 'abc/d', 'abc\\d', 'abc[d', 'abc(d', 'abc!d', 'abc#d', 'abc*d']
+        text = ['abc"d', 'abc/d', 'abc\\d', 'abc[d',
+                'abc(d', 'abc!d', 'abc#d', 'abc*d']
         expected_results = [
             ['abc', '"', 'd'],
             ['abc', '/', 'd'],
@@ -39,7 +43,11 @@ class PatternsTestCases(TestCase):
             ['abc', '*', 'd'],
         ]
         for index in range(len(text)):
-            matched_text = [substr for substr in re.split(Patterns.WORD_BF_CAPTURED_RE, text[index]) if substr != '' ]
+            matched_text = [
+                    substr
+                    for substr in re.split(Patterns.WORD_BF_CAPTURED_RE,
+                                           text[index])
+                    if substr != '']
             self.assertEqual(
                 matched_text,
                 expected_results[index])
@@ -57,7 +65,7 @@ class PatternsTestCases(TestCase):
                 'http://caroline-podevin.com/',
                 '(http://www.3ds.com/customer-stories/)',
                 'http://www.4D.fr.'
-        ]
+                ]
         pattern = Patterns.ALL_WEB_CAPTURED_RE
         expected_tokens = [
             ['http://www.erdfdistribution.fr'],
@@ -74,7 +82,9 @@ class PatternsTestCases(TestCase):
             ['http://www.4D.fr', '.']
         ]
         for index in range(len(expected_tokens)):
-            tokens = list(token for token in re.split(pattern, text[index]) if token)
+            tokens = [token
+                      for token in re.split(pattern, text[index])
+                      if token]
 
             self.assertEqual(
                 tokens,

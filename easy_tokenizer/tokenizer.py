@@ -36,13 +36,14 @@ class Tokenizer():
                 for token in self._top_down_tokenize(phrase,
                                                      match.start()):
                     if Patterns.PUNCT_SEQ_RE.fullmatch(token.text) and \
-                    Patterns.PARA_SEP_RE.fullmatch(token.text) is None:
+                            Patterns.PARA_SEP_RE.fullmatch(token.text) is None:
                         LOGGER.debug('split punc strings [{}]'.format(
                             token.text))
                         # a string of punc, very likely .. or ...
                         for shift, single_char in enumerate(token.text):
                             LOGGER.debug('punc seq[{}]: {}, {} -> {}'.format(
-                                    shift, single_char, token.start+shift, token.start+shift+1))
+                                         shift, single_char, token.start+shift,
+                                         token.start+shift+1))
                             yield TokenWithPos(single_char,
                                                token.start+shift,
                                                token.start+shift+1)
