@@ -30,4 +30,3 @@ def set_logging_level(level=logging.WARN):
 
 
 LOGGER = define_logger(__name__)
-LOGGER.setLevel(logging.DEBUG)
