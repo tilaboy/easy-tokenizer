@@ -221,6 +221,12 @@ try this one https://docs.google.com/document/d/1pd/edit?ts=5da580bc'''
             tokens = list(self.tokenizer.tokenize(text[index]))
             self.assertEqual(tokens, expected_tokens[index])
 
+    def test_long_url(self):
+        text = self.get_long_url_text()
+        expected_tokens = []
+        tokens = list(self.tokenizer.tokenize(text))
+        self.assertEqual(len(tokens), 63)
+
     def test_word_cancatenate_nonword(self):
         text = ["**Français : Niveau élevé",
                 "*Français",
@@ -269,4 +275,21 @@ http://www.investir.fr http://www.clubnewsparis.com http://www.cointreau.fr''',
             '''this is   a url: http://live.textkernel.nl,
 and you can chat with it'''
         ]
+        return text
+
+
+    @staticmethod
+    def get_long_url_text():
+        text = '''Yes, of course, for accommodation you can try the following links:http://jovecat.gencat.cat/ca/temes/habitatge/allotjament_per_a_estudiants/http://www.resahousing.com/enghttps://www.uniplaces.com/accommodation/barcelonahttps://www.spotahome.com/barcelona?utm_source=adwords&utm_medium=cpc&gclid=CjwKCAiAwojkBRBbEiwAeRcJZGPFbPd5kVp8nEuA24G2t5wEjruvBW1yLQz1X2On_RP5KZwLTE2gAhoCVjEQAvD_BwEhttps://erasmusu.com/en/erasmus-barcelona/student-housing
+  http://www.barcelona-student-housing.com/https://www.barcelonacheckin.com/en/r/barcelona_tourism_guide/articles/top-5-student-apartmentshttps://barcelona-home.com/blog/student-housing-barcelona/https://www.nestpick.com/student-apartments-barcelona/https://www.beroomers.com/blog/tag/student-accommodation-barcelona/https://www.rentbyowner.com/listing?q=Barcelona,%20Spain&gclid=CjwKCAiAwojkBRBbEiwAeRcJZFK7fahPsYmJtxqMu5JzZT4lxBVc8kbM-QrmsE37ri0Q7zijO6HEOxoC2zsQAvD_BwEhttp://ajuntament.barcelona.cat/joves/ca/noticia/nou-impuls-al-programa-viure-i-conviure This one is right beside the office place: http://osiresidences.com/ For social activities for students, you can try the following links:https://expanish.com/social-activities-in-barcelona-spain/ https://www.timeout.es/barcelona/es http://guia.barcelona.cat/es http://lameva.barcelona.cat/barcelonacultura/es/home http://barcelona.lecool.com/
+
+  https://www.moveo.cat/en/diploma-course/info-international-students/
+  Compensation:
+  No financial compensation
+
+  Requirements
+  Languages:
+  English: Independent User B2
+  Level of Studies:
+  Bachelor'''
         return text

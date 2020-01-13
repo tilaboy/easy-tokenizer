@@ -53,18 +53,19 @@ class PatternsTestCases(TestCase):
                 expected_results[index])
 
     def test_url_regexp(self):
-        text = ['http://www.erdfdistribution.fr',
-                'http://www.edf-bleuciel.fr',
-                'idnight.idtgv.com',
-                'http://www.fondation-jeanluclagardere.com',
-                'https://www.blog-des-astucieuses.fr',
-                'cecile.nguyen.site.voila.fr/',
-                'http://www.gemo.tm.fr/recrutement/formulaire',
-                'http://www.01podcast.com',
-                'http://bit.ly/j2JoOL',
-                'http://caroline-podevin.com/',
-                '(http://www.3ds.com/customer-stories/)',
-                'http://www.4D.fr.'
+        text = ['foo http://www.erdfdistribution.fr, bar',
+                'foo http://www.edf-bleuciel.fr" bar',
+                'foo idnight.idtgv.com, bar',
+                'foo http://www.fondation-jeanluclagardere.com bar',
+                'foo https://www.blog-des-astucieuses.fr www.foo.bar',
+                'foo cecile.nguyen.site.voila.fr/ www.foo.bar',
+                'foo http://www.gemo.tm.fr/recrutement/formulaire bar',
+                'foo http://www.01podcast.com www.for.bar/foo/bar',
+                'foo http://bit.ly/j2JoOL bar',
+                'foo http://caroline-podevin.com/ www.foo.bar/bar/',
+                'foo (http://www.3ds.com/customer-stories/) bar',
+                'foo http://www.4D.fr. bar',
+                'foo no url bar'
                 ]
         pattern = Patterns.ALL_WEB_CAPTURED_RE
         expected_tokens = [
@@ -72,18 +73,19 @@ class PatternsTestCases(TestCase):
             ['http://www.edf-bleuciel.fr'],
             ['idnight.idtgv.com'],
             ['http://www.fondation-jeanluclagardere.com'],
-            ['https://www.blog-des-astucieuses.fr'],
-            ['cecile.nguyen.site.voila.fr/'],
+            ['https://www.blog-des-astucieuses.fr', 'www.foo.bar'],
+            ['cecile.nguyen.site.voila.fr/', 'www.foo.bar'],
             ['http://www.gemo.tm.fr/recrutement/formulaire'],
-            ['http://www.01podcast.com'],
+            ['http://www.01podcast.com', 'www.for.bar/foo/bar'],
             ['http://bit.ly/j2JoOL'],
-            ['http://caroline-podevin.com/'],
-            ['(', 'http://www.3ds.com/customer-stories/', ')'],
-            ['http://www.4D.fr', '.']
+            ['http://caroline-podevin.com/', 'www.foo.bar/bar/'],
+            ['http://www.3ds.com/customer-stories/'],
+            ['http://www.4D.fr'],
+            []
         ]
         for index in range(len(expected_tokens)):
-            tokens = [token
-                      for token in re.split(pattern, text[index])
+            tokens = [token.group()
+                      for token in re.finditer(pattern, text[index])
                       if token]
 
             self.assertEqual(
