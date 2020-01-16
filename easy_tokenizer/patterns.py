@@ -46,18 +46,17 @@ class Patterns:
 
     # url, email
     ##################################
-    url_pn = r"(?:\w+\.[0-9a-zA-Z][-\w_]+)" \
-             r"(?:\.[0-9a-zA-Z][-\w_]+){1,5}" \
-             r"(?:(?:\/(?:[0-9a-zA-Z]|[-_?#=:&%])+)+)?\/?"
+    url_pn = r"(?:[0-9a-zA-Z][-\w_]+)" \
+             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}" \
+             r"(?:(?:\/(?:[0-9a-zA-Z]|[-_?.#=:&%])+)+)?\/?"
 
     url_strict_pn = r'(?:(?:http[s]?|ftp)://|wwww?[.])' \
-                    r'(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|' \
-                    r'(?:%[0-9a-fA-F][0-9a-fA-F]))+' \
-                    r'(?:\/|[0-9a-zA-Z])'
+                    r'(?:[a-zA-Z]|[0-9]|[-_:\/?@.&+=]|' \
+                    r'(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
     email_pn = r"\S+[@]\S+[.]\S+"
     domain_pn = r"[@]\S+[.]\S+"
-    all_web_pn = "|".join([url_pn, url_strict_pn, email_pn, domain_pn])
+    all_web_pn = "|".join([url_strict_pn, url_pn, email_pn, domain_pn])
     all_web_captured_pn = _captured_pattern(all_web_pn)
 
     URL_RE = re.compile(url_pn)
@@ -70,7 +69,7 @@ class Patterns:
     # word bourdary
     ##################################
 
-    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>&@^$\|~%]|\.{2,}'
+    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>@^$\|~%]|\.{2,}'
     word_bf_captured_pn = _captured_pattern(word_bf_pn)
     WORD_BF_CAPTURED_RE = re.compile(word_bf_captured_pn)
 
