@@ -46,18 +46,17 @@ class Patterns:
 
     # url, email
     ##################################
-    url_pn = r"(?:[\w-]+:\/\/?|\w+[.])" \
-             r"(?:[0-9a-zA-Z][-\w_]*)" \
-             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}"  \
-             r"(?:(?:\/(?:[0-9a-zA-Z]|[\-_?#=:&]|" \
-             r"%[0-9a-fA-F]{2}|\.[0-9a-zA-Z]|)+)+)?\/?"
+    url_pn = r"(?:[0-9a-zA-Z][-\w_]+)" \
+             r"(?:\.[0-9a-zA-Z][-\w_]+){2,5}" \
+             r"(?:(?:\/(?:[0-9a-zA-Z]|[-_?.#=:&%])+)+)?\/?"
 
-    url_strict_pn = r'(?:(?:http[s]?|ftp)://|www[.])' \
-                    r'(?:[0-9a-zA-Z]|[._?#=/:%&-])+(?:\/|[0-9a-zA-Z])'
+    url_strict_pn = r'(?:(?:http[s]?|ftp)://|wwww?[.])' \
+                    r'(?:[a-zA-Z]|[0-9]|[-_:\/?@.&+=]|' \
+                    r'(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
     email_pn = r"\S+[@]\S+[.]\S+"
     domain_pn = r"[@]\S+[.]\S+"
-    all_web_pn = "|".join([url_pn, url_strict_pn, email_pn, domain_pn])
+    all_web_pn = "|".join([url_strict_pn, url_pn, email_pn, domain_pn])
     all_web_captured_pn = _captured_pattern(all_web_pn)
 
     URL_RE = re.compile(url_pn)
@@ -70,7 +69,7 @@ class Patterns:
     # word bourdary
     ##################################
 
-    word_bf_pn = r'[\(\)\[\]\{\}\"“”\'`»\:,\/\\]'
+    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>@^$\|~%]|\.{2,}'
     word_bf_captured_pn = _captured_pattern(word_bf_pn)
     WORD_BF_CAPTURED_RE = re.compile(word_bf_captured_pn)
 
@@ -84,7 +83,6 @@ class Patterns:
 
     # abbrev
     ##################################
-
     months = ['jan', 'feb', 'mar', 'apr', 'jun',
               'jul', 'aug', 'sep', 'Sept',
               'sept', 'SEPT', 'oct', 'nov', 'dec']
@@ -93,10 +91,8 @@ class Patterns:
     known_month_pn = r"(?:" + r"|".join(months) + r")\."
     ABBREV_RE = re.compile(repeat_abbrev_pn + r'|' + known_month_pn)
 
-    @staticmethod
-    def is_paragraph_seprator(phrase):
-        punct_seq_regexp = re.compile(r'([\W]|\+\-)\1{2,}')
-        return punct_seq_regexp.fullmatch(phrase)
+    PUNCT_SEQ_RE = re.compile(r'[-!\'#%&`()\[\]*+,.\\/:;<=>?@^$_{|}~]+')
+    PARA_SEP_RE = re.compile(r'(\W|\+\-)\1{4,}')
 
     @staticmethod
     def abbreviation(phrase):
