@@ -61,7 +61,7 @@ class TokenizerTestCases(TestCase):
         ]
         expected_tokens = [
             ['Programmation', 'C', '/', 'C++', '/', 'Java', '/', 'PHP', '/',
-             'Perl', '/', 'JSP', '.']
+             'Perl', '/', 'JSP.']
         ]
         for index in range(len(expected_tokens)):
             tokens = list(self.tokenizer.tokenize(text[index]))
@@ -224,8 +224,8 @@ try this one https://docs.google.com/document/d/1pd/edit?ts=5da580bc'''
     def test_long_url(self):
         text = self.get_long_url_text()
         tokens = list(self.tokenizer.tokenize(text))
-        print("\n\n".join(tokens))
-        self.assertEqual(len(tokens), 18)
+        #print("\n\n".join(tokens))
+        self.assertEqual(len(tokens), 26)
 
     def test_word_cancatenate_nonword(self):
         text = ["**Français : Niveau élevé",
@@ -255,8 +255,7 @@ try this one https://docs.google.com/document/d/1pd/edit?ts=5da580bc'''
 
     @staticmethod
     def get_url_text():
-        text = [
-            '''REFERENCES http://www.erdfdistribution.fr
+        text = ['''REFERENCES http://www.erdfdistribution.fr
 http://www.idtgv.com http://www.edf-bleuciel.fr
 idnight.idtgv.com http://investisseurs.edf.com
 http://www.metaxa.com ina.edf.com http://www.hutchinson.fr
@@ -269,11 +268,14 @@ http://www.investir.fr http://www.clubnewsparis.com http://www.cointreau.fr''',
             'http://bit.ly/j2JoOL',
             '2 ENFANTS - http://caroline-podevin.com/',
             '(http://www.3ds.com/customer-stories/)',
-            '''4D S.A
-    http://www.4D.fr.
-    ITK http://www.internet-toolkit.com (outil TCP/IP''',
+            '4D S.A\n    http://www.4D.fr.\n     ITK http://www.internet-toolkit.com (outil TCP/IP',
             '''this is   a url: http://live.textkernel.nl,
-and you can chat with it'''
+and you can chat with it''',
+            '''following address:
+http://eurlex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1962R0031:20140101:EN:PDF.
+salary table please refer to CEOS:
+http://eurlex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1962R0031:2014 0101:EN:PDF.
+'''
         ]
         return text
 

@@ -80,7 +80,7 @@ class PatternsTestCases(TestCase):
             ['http://bit.ly/j2JoOL'],
             ['http://caroline-podevin.com/', 'www.foo.bar/bar/'],
             ['http://www.3ds.com/customer-stories/'],
-            ['http://www.4D.fr'],
+            ['http://www.4D.fr.'],
             []
         ]
         for index in range(len(expected_tokens)):
