@@ -1,3 +1,9 @@
+0.0.10 (2020-03-02)
+==================
+
+- [INTERNAL] removed all debug message for speedup
+- [INTERNAL] extend word boundary charset with geographical shapes
+
 0.0.9 (2020-01-16)
 ==================
 
