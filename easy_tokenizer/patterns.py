@@ -59,7 +59,7 @@ class Patterns:
     all_web_pn = "|".join([url_strict_pn, url_pn, email_pn, domain_pn])
     all_web_captured_pn = _captured_pattern(all_web_pn)
 
-    URL_RE = re.compile(url_pn)
+    URL_RE = re.compile("|".join([url_pn, url_strict_pn]))
     EMAIL_RE = re.compile(email_pn)
     DOMAIN_RE = re.compile(domain_pn)
 
@@ -69,7 +69,10 @@ class Patterns:
     # word bourdary
     ##################################
 
-    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>@^$\|~%]|\.{2,}'
+    word_bf_pn = r'[()\[\]{}"“”\'`»:;,/\\*?!…<=>@^$\|~%]|' \
+                 r'[\u2022\u2751\uF000\uF0FF]|' \
+                 r'[\u25A0-\u25FF]|' \
+                 r'\.{2,}'
     word_bf_captured_pn = _captured_pattern(word_bf_pn)
     WORD_BF_CAPTURED_RE = re.compile(word_bf_captured_pn)
 
