@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 NAME = "easy_tokenizer"
-VERSION = os.environ.get("EASY_TOKENIZER_VERSION", '0.0.9')
+VERSION = os.environ.get("EASY_TOKENIZER_VERSION", '0.0.10')
 
 with open('README.rst', "r") as readme_file:
     readme = readme_file.read()
