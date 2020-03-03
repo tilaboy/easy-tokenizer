@@ -31,7 +31,9 @@ class PatternsTestCases(TestCase):
 
     def test_word_boundary_regexp(self):
         text = ['abc"d', 'abc/d', 'abc\\d', 'abc[d',
-                'abc(d', 'abc!d', 'abc#d', 'abc*d']
+                'abc(d', 'abc!d', 'abc#d', 'abc*d',
+                'informatici•Ambizione', 'propria•Buone',
+                '•Buone', '▸Buone']
         expected_results = [
             ['abc', '"', 'd'],
             ['abc', '/', 'd'],
@@ -41,6 +43,10 @@ class PatternsTestCases(TestCase):
             ['abc', '!', 'd'],
             ['abc#d'],
             ['abc', '*', 'd'],
+            ['informatici', '•', 'Ambizione'],
+            ['propria', '•', 'Buone'],
+            ['•', 'Buone'],
+            ['▸', 'Buone']
         ]
         for index in range(len(text)):
             matched_text = [
