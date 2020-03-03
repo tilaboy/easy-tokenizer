@@ -1,7 +1,6 @@
 '''Tokenizer Class'''
 # -*- encoding: utf-8 -*-
 import re
-from . import LOGGER
 from .token_with_pos import TokenWithPos
 from .patterns import Patterns
 
@@ -23,14 +22,9 @@ class Tokenizer():
     def _tokenize(self, text):
         for match in self.regexp.finditer(text):
             phrase = match.group()
-            LOGGER.debug('check: [{}]'.format(phrase))
             if self.space_regexp.search(phrase):
                 continue
-
             if self._phrase_full_match(phrase) is not None:
-                LOGGER.debug('match: [{}], {}, {}'.format(phrase,
-                                                          match.start(),
-                                                          match.end()))
                 for adjusted_token in self._adjust_on_punc(
                         TokenWithPos(phrase, match.start(), match.end())):
                     yield adjusted_token
@@ -43,43 +37,30 @@ class Tokenizer():
     def _adjust_on_punc(self, token):
         if Patterns.PUNCT_SEQ_RE.fullmatch(token.text) and \
                 Patterns.PARA_SEP_RE.fullmatch(token.text) is None:
-            LOGGER.debug('split punc strings [{}]'.format(
-                token.text))
             # a string of punc, very likely .. or ...
             for shift, single_char in enumerate(token.text):
-                LOGGER.debug('punc seq[{}]: {}, {} -> {}'.format(
-                             shift, single_char, token.start+shift,
-                             token.start+shift+1))
+                start_pos = token.start + shift
                 yield TokenWithPos(single_char,
-                                   token.start+shift,
-                                   token.start+shift+1)
+                                   start_pos,
+                                   start_pos + 1)
 
         elif self._has_end_of_phrase_punc(token.text) and \
                 self._phrase_full_match(token.text) in [None, 'url/email']:
-            LOGGER.debug('split_last : [{}], {}, {}'.format(
-                token.text, token.start, token.end))
+            end_pos = token.end - 1
             for splitted_token in [
                     TokenWithPos(token.text[:-1],
                                  token.start,
-                                 token.end - 1),
+                                 end_pos),
                     TokenWithPos(token.text[-1],
-                                 token.end - 1,
+                                 end_pos,
                                  token.end)
             ]:
                 yield splitted_token
         else:
-            LOGGER.debug('  output: [{}], {}, {}'.
-                         format(token.text,
-                                token.start,
-                                token.end))
             yield token
 
     def _top_down_tokenize(self, phrase, offset=0):
         # first get the web url and emails out
-        LOGGER.debug('l1_start: [{}], {}, {}'.format(phrase,
-                                                     offset,
-                                                     offset + len(phrase)))
-
         for token in self._top_down_level_1(phrase, offset):
             yield token
 
@@ -90,21 +71,17 @@ class Tokenizer():
         for sub_phrase in re.split(Patterns.ALL_WEB_CAPTURED_RE, phrase):
             if sub_phrase == '':
                 continue
+
+            length_sub_phrase = len(sub_phrase)
             if self._phrase_full_match(sub_phrase) is not None:
-                LOGGER.debug('l1_match: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase,
                                    offset,
-                                   offset + len(sub_phrase))
+                                   offset + length_sub_phrase)
 
             else:
-                LOGGER.debug('l2_start: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 for token in self._top_down_level_2(sub_phrase, offset):
                     yield token
-            offset += len(sub_phrase)
+            offset += length_sub_phrase
 
     def _top_down_level_2(self, phrase, offset=0):
         '''
@@ -113,20 +90,16 @@ class Tokenizer():
         for sub_phrase in re.split(Patterns.DIGITS_CAPTURED_RE, phrase):
             if sub_phrase == '':
                 continue
+
+            length_sub_phrase = len(sub_phrase)
             if self._phrase_full_match(sub_phrase) is not None:
-                LOGGER.debug('l2_match: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase,
                                    offset,
-                                   offset + len(sub_phrase))
+                                   offset + length_sub_phrase)
             else:
-                LOGGER.debug('l3_start: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 for token in self._top_down_level_3(sub_phrase, offset):
                     yield token
-            offset = offset + len(sub_phrase)
+            offset += length_sub_phrase
 
     def _top_down_level_3(self, phrase, offset=0):
         '''
@@ -135,20 +108,16 @@ class Tokenizer():
         for sub_phrase in re.split(Patterns.WORD_BF_CAPTURED_RE, phrase):
             if sub_phrase == '':
                 continue
+
+            length_sub_phrase = len(sub_phrase)
             if self._phrase_full_match(sub_phrase) is not None:
-                LOGGER.debug('l3_match: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 yield TokenWithPos(sub_phrase,
                                    offset,
-                                   offset + len(sub_phrase))
+                                   offset + length_sub_phrase)
             else:
-                LOGGER.debug('l4_start: [{}], {}, {}'.format(sub_phrase,
-                             offset,
-                             offset + len(sub_phrase)))
                 for token in self._top_down_level_4(sub_phrase, offset):
                     yield token
-            offset = offset + len(sub_phrase)
+            offset += length_sub_phrase
 
     def _top_down_level_4(self, phrase, offset):
         '''
@@ -173,11 +142,11 @@ class Tokenizer():
                     # mx-doc, tcp-ip, e-mail, hp-ux etc. #
                     splitted = False
 
-        LOGGER.debug('split phrase: [{}] is {}'.format(phrase, splitted))
         if splitted:
             for part in parts:
-                yield TokenWithPos(part, offset, offset + len(part))
-                offset += len(part)
+                new_offset = offset + len(part)
+                yield TokenWithPos(part, offset, new_offset)
+                offset = new_offset
         else:
             # pick up what ever left as a token #
             yield TokenWithPos(phrase, offset, offset + len(phrase))
@@ -194,18 +163,18 @@ class Tokenizer():
         matched_type = None
         if len(phrase) == 1:
             matched_type = 'single_char'
-        elif phrase.isalpha() or phrase in Patterns.si_units:
+        elif phrase.isalpha():
             matched_type = 'word'
-        elif Patterns.ALL_WEB_RE.fullmatch(phrase):
-            matched_type = 'url/email'
+        elif phrase in Patterns.si_units:
+            matched_type = 'unit'
         elif Patterns.DIGITS_RE.fullmatch(phrase):
             matched_type = 'digit'
-        elif Patterns.abbreviation(phrase):
-            matched_type = 'abbreviation'
         elif Patterns.PARA_SEP_RE.fullmatch(phrase):
             matched_type = 'punctuation_seq'
-
-        LOGGER.debug('matched type: [{}]'.format(matched_type))
+        elif Patterns.abbreviation(phrase):
+            matched_type = 'abbreviation'
+        elif Patterns.ALL_WEB_RE.fullmatch(phrase):
+            matched_type = 'url/email'
         return matched_type
 
     def tokenize(self, text):
@@ -228,7 +197,4 @@ class Tokenizer():
         output:
             - a list of Token object
         '''
-        tokens = []
-        for token in self._tokenize(text):
-            tokens.append(token)
-        return tokens
+        return list(self._tokenize(text))
