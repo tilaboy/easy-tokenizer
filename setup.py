@@ -30,7 +30,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     test_suite="tests",
     setup_requires=setup_requirements,
     tests_require=test_requirements,
