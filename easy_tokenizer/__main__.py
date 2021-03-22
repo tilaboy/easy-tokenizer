@@ -1,5 +1,5 @@
 '''
-taxonomy_match: script to load a taxonomy, and find all matches from input
+easy_tokenize: script to tokenize a input file or input text
 '''
 from argparse import ArgumentParser
 from . import LOGGER
